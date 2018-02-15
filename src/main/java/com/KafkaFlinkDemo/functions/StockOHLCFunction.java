@@ -3,9 +3,9 @@ package com.KafkaFlinkDemo.functions;
 import org.apache.flink.api.common.functions.AggregateFunction;
 
 import com.KafkaFlinkDemo.model.LiveStockQuote;
-import com.KafkaFlinkDemo.model.StockOHLC;
+import com.KafkaFlinkDemo.model.StockQuoteDto;
 
-public class StockOHLCFunction implements AggregateFunction<LiveStockQuote, StockOHLC, StockOHLC>{
+public class StockOHLCFunction implements AggregateFunction<LiveStockQuote, StockQuoteDto, StockQuoteDto>{
 
 	/**
 	 * 
@@ -13,13 +13,13 @@ public class StockOHLCFunction implements AggregateFunction<LiveStockQuote, Stoc
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public StockOHLC createAccumulator() {
+	public StockQuoteDto createAccumulator() {
 		System.out.println("Create acculatetor called");
-		return new StockOHLC();
+		return new StockQuoteDto();
 	}
 
 	@Override
-	public StockOHLC add(LiveStockQuote value, StockOHLC accumulator) {
+	public StockQuoteDto add(LiveStockQuote value, StockQuoteDto accumulator) {
 		int count =0;
 		if(count==0) {
 			accumulator.setOpen(value.getOpen());
@@ -44,13 +44,13 @@ public class StockOHLCFunction implements AggregateFunction<LiveStockQuote, Stoc
 	}
 
 	@Override
-	public StockOHLC getResult(StockOHLC accumulator) {
+	public StockQuoteDto getResult(StockQuoteDto accumulator) {
 		System.out.println("returned acc = "+accumulator);
 		return accumulator;
 	}
 
 	@Override
-	public StockOHLC merge(StockOHLC a, StockOHLC b) {
+	public StockQuoteDto merge(StockQuoteDto a, StockQuoteDto b) {
 		System.out.println("get marge called ");
 		return a;
 	}

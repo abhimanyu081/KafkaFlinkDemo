@@ -21,7 +21,7 @@ public class GenericJavaDesrializerSchema<T> extends AbstractDeserializationSche
 
 	@Override
 	public T deserialize(byte[] message) throws IOException {
-		return SerializationUtils.deserializeByteArray(message,type);
+		return DeserializationUtil.deserializeToObject(message,type);
 	}
 
 }

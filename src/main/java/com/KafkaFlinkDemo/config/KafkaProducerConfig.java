@@ -11,8 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
+import com.KafkaFlinkDemo.model.StockQuoteDto;
 import com.KafkaFlinkDemo.properties.ApplicationProperties;
+
 
 @Configuration
 public class KafkaProducerConfig {
@@ -21,16 +24,16 @@ public class KafkaProducerConfig {
 	ApplicationProperties props;
 	
 	@Bean
-    public ProducerFactory<String, String> producerFactory() {
+    public ProducerFactory<String, StockQuoteDto> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, props.getBootstrapServer());
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        return new DefaultKafkaProducerFactory<String, String>(configProps);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<String, StockQuoteDto>(configProps);
     }
- 
+    
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
-        return new KafkaTemplate<String, String>(producerFactory());
+    public KafkaTemplate<String, StockQuoteDto> kafkaTemplateLiveStock() {
+        return new KafkaTemplate<String, StockQuoteDto>(producerFactory());
     }
 }

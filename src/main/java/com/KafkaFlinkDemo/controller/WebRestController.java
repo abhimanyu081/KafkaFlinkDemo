@@ -1,64 +1,32 @@
 package com.KafkaFlinkDemo.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.KafkaFlinkDemo.dataSource.LiveStockDataFetcher;
-import com.KafkaFlinkDemo.model.LiveStockQuote;
-import com.KafkaFlinkDemo.properties.ApplicationProperties;
-import com.KafkaFlinkDemo.service.FlinkConsumer;
-import com.KafkaFlinkDemo.service.KafkaProducer;
-import com.KafkaFlinkDemo.storage.MessageStorage;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.KafkaFlinkDemo.constants.StringConstants;
+import com.KafkaFlinkDemo.model.StockQuoteDto;
 
 @RestController
 public class WebRestController {
 	
-	
 	@Autowired
-	MessageStorage storage;
+	RedisTemplate<String, StockQuoteDto> redisTemplate;
 	
-	@Autowired
-	LiveStockDataFetcher dataFetcher;
-	
-	@Autowired
-	private KafkaProducer producer;
-	
-	
-	@Autowired
-	ApplicationProperties props;
-	
-	@Autowired FlinkConsumer flinkConsumer;
-	
-	
-	
-	
-	@RequestMapping(value="/consumer")
-	public String getAllRecievedMessage() throws Exception{
-		flinkConsumer.createStockOhlcByInterval(1);
-		return "OK";
+	@RequestMapping("/stats/gainers")
+	public List<StockQuoteDto> getGainers(){
+		List<StockQuoteDto> list = new ArrayList<>(redisTemplate.opsForZSet().range(StringConstants.REDIS_KEY_GAINERS, 0, -1));
+		return list;
 	}
 	
 	
-	@RequestMapping(value="/flink/consumer")
-	public String getFlinkMessage() throws Exception{
-		
-		
-		return "OK";
-	}
 	
-	@RequestMapping(value="/producer")
-	public String loadStockQuotes() throws JsonProcessingException, InterruptedException { 
-		List<LiveStockQuote> list = dataFetcher.callApiForIntradayQuotes1Min("AAPL");
-		System.out.println(list.size());
-		for(LiveStockQuote stk : list) {
-			//Thread.sleep(500);
-			producer.sendLiveStockQuotesToKafka(stk);
-		}
-		return "DONE";
-	}
+	
+	
+
 }

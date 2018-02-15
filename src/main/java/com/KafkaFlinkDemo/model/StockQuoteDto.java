@@ -1,18 +1,19 @@
 package com.KafkaFlinkDemo.model;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 
-import org.apache.flink.api.common.serialization.SerializationSchema;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class StockOHLC implements SerializationSchema<StockOHLC>{
+@JsonInclude(Include.NON_NULL)
+public class StockQuoteDto{
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+
 	BigDecimal ZERO = BigDecimal.ZERO;
 	BigDecimal MAX_VALUE = BigDecimal.valueOf(Double.MAX_VALUE);
 	
@@ -24,8 +25,42 @@ public class StockOHLC implements SerializationSchema<StockOHLC>{
 	private BigDecimal high=ZERO;
 	private BigDecimal low=MAX_VALUE;
 	private BigDecimal close=ZERO;
+	private BigDecimal price=ZERO;
+	private BigInteger volume=BigInteger.ZERO;
+	private Date timestamp2=new Date();
 	
 	
+	public StockQuoteDto() {}
+	
+	public StockQuoteDto(String symbol, BigDecimal price, BigInteger volume, Date timestamp2) {
+		super();
+		this.symbol = symbol;
+		this.price = price;
+		this.volume = volume;
+		this.timestamp2 = timestamp2;
+	}
+	
+	public BigDecimal getPrice() {
+		return price;
+	}
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+	public BigInteger getVolume() {
+		return volume;
+	}
+	public void setVolume(BigInteger volume) {
+		this.volume = volume;
+	}
+
+	public Date getTimestamp2() {
+		return timestamp2;
+	}
+
+	public void setTimestamp2(Date timestamp2) {
+		this.timestamp2 = timestamp2;
+	}
+
 	public String getDateTime() {
 		return dateTime;
 	}
@@ -73,18 +108,4 @@ public class StockOHLC implements SerializationSchema<StockOHLC>{
 		return "StockOHLC [dateTime=" + dateTime + ", interval=" + interval + ", symbol=" + symbol + ", open=" + open
 				+ ", high=" + high + ", low=" + low + ", close=" + close + "]";
 	}
-	@Override
-	public byte[] serialize(StockOHLC element) {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			return mapper.writeValueAsBytes(element);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	
-	
 }
