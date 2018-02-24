@@ -14,11 +14,11 @@ public class GainerLoserCron {
 	@Autowired
 	FlinkConsumer flinkConsumer;
 
-	@Scheduled(cron="0 0/1 * * * ?")
+	@Scheduled(cron="0/30 * * * * ?")
 	public void calculateGainers() {
 		System.out.println("GainerLoser Cron started at "+ new Date());
 		try {
-			flinkConsumer.getGainerLoser(1);
+			flinkConsumer.getGainerLoserNse(1);
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

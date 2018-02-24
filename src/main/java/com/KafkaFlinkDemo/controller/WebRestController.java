@@ -10,18 +10,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.KafkaFlinkDemo.constants.StringConstants;
-import com.KafkaFlinkDemo.model.StockQuoteDto;
+import com.KafkaFlinkDemo.model.LiveIndexDataDto;
+import com.KafkaFlinkDemo.service.MongoDataService;
 
 @RestController
 public class WebRestController {
 	
 	@Autowired
-	RedisTemplate<String, StockQuoteDto> redisTemplate;
+	RedisTemplate<String, LiveIndexDataDto> redisTemplate;
+	
+	@Autowired
+	MongoDataService mongo;
 	
 	@RequestMapping("/stats/gainers")
-	public List<StockQuoteDto> getGainers(){
-		List<StockQuoteDto> list = new ArrayList<>(redisTemplate.opsForZSet().range(StringConstants.REDIS_KEY_GAINERS, 0, -1));
+	public List<LiveIndexDataDto> getGainers(){
+		List<LiveIndexDataDto> list = new ArrayList<LiveIndexDataDto>(redisTemplate.opsForZSet().range(StringConstants.REDIS_KEY_GAINERS, 0, -1));
 		return list;
+	}
+	
+	@RequestMapping("/quote/nse")
+	public List<LiveIndexDataDto> getQoutes(){
+		return mongo.findAll().subList(0, 1);
 	}
 	
 	

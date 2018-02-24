@@ -37,10 +37,28 @@ public class ApplicationProperties {
 	@Value("${redis.db}")
 	private int redisDb;
 	
+	@Value("${mongo.host}")
+	private String mongoHost;
+	
+	@Value("${mongo.port}")
+	private String mongoPort;
 	
 	
 	
-	
+	public String getMongoHost() {
+		return mongoHost;
+	}
+
+
+
+
+	public String getMongoPort() {
+		return mongoPort;
+	}
+
+
+
+
 	public String getRedisHost() {
 		return redisHost;
 	}

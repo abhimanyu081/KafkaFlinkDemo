@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import com.KafkaFlinkDemo.model.LiveIndexDataDto;
 import com.KafkaFlinkDemo.model.StockQuoteDto;
 import com.KafkaFlinkDemo.properties.ApplicationProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,12 +18,21 @@ public class KafkaProducer {
 
 	@Autowired
 	private KafkaTemplate<String, StockQuoteDto> kafkaTemplate;
+	
+
+	@Autowired
+	private KafkaTemplate<String, LiveIndexDataDto> kafkaTemplateNse;
 
 	@Autowired
 	ApplicationProperties props;
 
 	public void sendLiveStockQuotesToKafka(StockQuoteDto quote) throws InterruptedException, JsonProcessingException {
 		kafkaTemplate.send(props.getKafkaTopicStkQuotes(), quote);
+		LOG.info("Stock quote sent to kafka with symbol {} and time {}",quote.getSymbol(), quote.getDateTime());
+	}
+	
+	public void sendLiveStockQuotesToKafka(LiveIndexDataDto quote) throws InterruptedException, JsonProcessingException {
+		kafkaTemplateNse.send(props.getKafkaTopicStkQuotes(), quote);
 		LOG.info("Stock quote sent to kafka with symbol {} and time {}",quote.getSymbol(), quote.getDateTime());
 	}
 }

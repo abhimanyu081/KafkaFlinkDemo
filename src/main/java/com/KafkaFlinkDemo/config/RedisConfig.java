@@ -6,10 +6,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import com.KafkaFlinkDemo.model.StockQuoteDto;
 
 @Configuration
 public class RedisConfig {
@@ -23,7 +20,7 @@ public class RedisConfig {
 		return jedisConFactory;
 	}
 
-	@Bean
+	/*@Bean
 	public RedisTemplate<String, StockQuoteDto> redisTemplateStockQuote() {
 		RedisTemplate<String, StockQuoteDto> template = new RedisTemplate<String, StockQuoteDto>();
 		template.setConnectionFactory(jedisConnectionFactory());
@@ -31,7 +28,7 @@ public class RedisConfig {
 		template.setValueSerializer(new Jackson2JsonRedisSerializer<>(StockQuoteDto.class));
 		template.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(StockQuoteDto.class));
 		return template;
-	}
+	}*/
 	
 	@Bean
 	public RedisTemplate<String, Object> redisTemplate() {
@@ -43,4 +40,14 @@ public class RedisConfig {
 		return template;
 	}
 
+	/*@Bean
+	public RedisTemplate<String, LiveIndexDataDto> redisTemplateStockQuoteNSE() {
+		RedisTemplate<String, LiveIndexDataDto> template = new RedisTemplate<String, LiveIndexDataDto>();
+		template.setConnectionFactory(jedisConnectionFactory());
+		template.setKeySerializer(new StringRedisSerializer());
+		template.setValueSerializer(new Jackson2JsonRedisSerializer<>(LiveIndexDataDto.class));
+		template.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(LiveIndexDataDto.class));
+		return template;
+	}*/
+	
 }

@@ -4,11 +4,11 @@ import org.apache.flink.streaming.connectors.redis.common.mapper.RedisCommand;
 import org.apache.flink.streaming.connectors.redis.common.mapper.RedisCommandDescription;
 import org.apache.flink.streaming.connectors.redis.common.mapper.RedisMapper;
 
-import com.KafkaFlinkDemo.model.StockQuoteDto;
+import com.KafkaFlinkDemo.model.LiveIndexDataDto;
 import com.KafkaFlinkDemo.util.SerializationUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class RedisMapperForStockQuote implements RedisMapper<StockQuoteDto>{
+public class RedisMapperForStockQuote implements RedisMapper<LiveIndexDataDto>{
 	
 	private String key;
 	private RedisCommand command;
@@ -32,7 +32,7 @@ public class RedisMapperForStockQuote implements RedisMapper<StockQuoteDto>{
 	}
 
 	@Override
-	public String getKeyFromData(StockQuoteDto data) {
+	public String getKeyFromData(LiveIndexDataDto data) {
 		try {
 			return SerializationUtil.serializeToJsonString(data);
 		} catch (JsonProcessingException e) {
@@ -43,7 +43,7 @@ public class RedisMapperForStockQuote implements RedisMapper<StockQuoteDto>{
 	}
 
 	@Override
-	public String getValueFromData(StockQuoteDto data) {
-		return String.valueOf(data.getPrice());
+	public String getValueFromData(LiveIndexDataDto data) {
+		return data.getPercentChange();
 	}
 }
